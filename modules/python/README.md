@@ -7,7 +7,7 @@ This setup follows a **system-level tools, project-level environments** approach
 
 ## System Setup
 
-Python versions are managed by `pyenv` and stored in `~/.pyenv`. The install script sets up a default Python version. To install additional versions:
+Python versions are managed by `pyenv` and stored in `~/.pyenv`. The install script sets up the latest stable Python 3 version as the default. To install additional versions:
 
 ```
 pyenv install 3.12.7

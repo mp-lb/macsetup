@@ -3,7 +3,6 @@
 set -e
 
 source <(curl -fsSL https://raw.githubusercontent.com/felixsebastian/macsetup/main/lib/output.sh)
-source <(curl -fsSL https://raw.githubusercontent.com/felixsebastian/macsetup/main/lib/repo-prompt.sh)
 
 log "Starting complete macsetup installation."
 mkdir -p "$HOME/Code"
@@ -15,9 +14,9 @@ brew install gh go-task/tap/go-task awscli tmux overmind
 
 gh auth status >/dev/null 2>&1 || gh auth login
 
-prompt_override_repo
-PROMPT_RESULT=$?
-if [ "$PROMPT_RESULT" -eq 0 ]; then
+if [ -d "$HOME/Code/macsetup/.git" ]; then
+  note "Using existing repository at $HOME/Code/macsetup."
+else
   gh repo clone felixsebastian/macsetup "$HOME/Code/macsetup"
 fi
 

@@ -14,6 +14,7 @@ command -v uv >/dev/null 2>&1 || (curl -LsSf https://astral.sh/uv/install.sh | s
 poetry --version >/dev/null 2>&1 || uv tool install --force --managed-python poetry
 poetry config virtualenvs.in-project true
 
-pyenv install 3:latest || true
-pyenv global $(pyenv versions --bare | tail -1)
+PYTHON_VERSION=$(pyenv latest -k 3)
+pyenv install "$PYTHON_VERSION" || true
+pyenv global "$PYTHON_VERSION"
 success "Python (user) installation complete."
