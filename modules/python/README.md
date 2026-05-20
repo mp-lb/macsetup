@@ -2,7 +2,7 @@
 
 This setup follows a **system-level tools, project-level environments** approach:
 
-- **System level**: `pyenv`, `pipx`, `poetry`, and `uv` are installed globally. Python versions are managed by `pyenv` and stored in `~/.pyenv`. Both `poetry` and `uv` are available as package managers.
+- **System level**: `pyenv`, `poetry`, and `uv` are installed globally. Python versions are managed by `pyenv` and stored in `~/.pyenv`, and `poetry` is installed via `uv tool install`. Both `poetry` and `uv` are available as package managers.
 - **Project level**: Each project has its own self-contained `.venv` directory containing the Python interpreter and all dependencies. Everything needed for the project lives in the project folder.
 
 ## System Setup
