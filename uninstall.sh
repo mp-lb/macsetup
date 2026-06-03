@@ -2,30 +2,32 @@
 
 set -e
 
-source <(curl -fsSL https://raw.githubusercontent.com/felixsebastian/macsetup/main/lib/output.sh)
-source <(curl -fsSL https://raw.githubusercontent.com/felixsebastian/macsetup/main/lib/repo-prompt.sh)
+SCRIPT_DIR="${0:A:h}"
+source "$SCRIPT_DIR/lib/output.sh"
 
-# run module uninstallers
-[ -f "$HOME/Code/macsetup/modules/node/uninstall.sh" ] && $HOME/Code/macsetup/modules/node/uninstall.sh
-[ -f "$HOME/Code/macsetup/modules/python/uninstall.sh" ] && $HOME/Code/macsetup/modules/python/uninstall.sh
-[ -f "$HOME/Code/macsetup/modules/ruby/uninstall.sh" ] && $HOME/Code/macsetup/modules/ruby/uninstall.sh
+log "Removing legacy macsetup-managed runtimes."
 
-prompt_remove_repo || exit 1
+if [ -f "$HOME/.nvm/nvm.sh" ]; then
+  source "$HOME/.nvm/nvm.sh"
+  npm uninstall -g pnpm pm2 zapper-cli @mp-lb/zapper 2>/dev/null || true
+fi
 
-# remove core files
-rm -rf $HOME/Code
-rm -f $HOME/.gitconfig
-rm -f $HOME/.zshrc
-rm -f $HOME/sandbox.sh
-rm -f $HOME/.zsh_history
-rm -rf $HOME/.zsh_sessions
-rm -rf $HOME/.config/gh
+rm -rf "$HOME/.nvm"
+rm -rf "$HOME/.pyenv"
+rm -rf "$HOME/.rbenv"
+rm -rf "$HOME/google-cloud-sdk"
+rm -rf "$HOME/Library/pnpm"
+rm -rf "$HOME/.config/pypoetry"
 
-# uninstall oh my zsh
-source $HOME/.oh-my-zsh/tools/uninstall.sh
+if [ "${1:-}" = "--all" ]; then
+  log "Removing current mise-managed runtime state."
+  rm -rf "$HOME/.local/share/mise"
+  rm -rf "$HOME/.config/mise"
+fi
 
-# uninstall homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
-sudo rm -rf /opt/homebrew
+if [ -f "$HOME/.zshrc" ] && grep -q "Code/macsetup/env/zshrc" "$HOME/.zshrc"; then
+  rm -f "$HOME/.zshrc"
+fi
 
-note "Cache directories (~/.cache, ~/.npm, ~/.gem) and SSH keys (~/.ssh) may exist. Review and manually delete them if needed."
+success "Legacy macsetup-managed runtime cleanup complete."
+note "Homebrew, gh auth, git config, ~/Code, and project files were intentionally left in place."

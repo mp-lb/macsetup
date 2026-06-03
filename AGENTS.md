@@ -1,24 +1,52 @@
 # Macsetup
 
-This repository automates the initial setup of a new Mac with essential developer tools and configurations. The philosophy is simplicity: the scripts are a direct, one-to-one mapping of the manual commands that would normally be run when setting up a fresh machine. There are no complex conditionals or elaborate error handling—just straightforward commands that install runtimes (Node.js, Python, Ruby), configure ZSH with Oh My Zsh, set up Homebrew, and copy configuration files like `.zshrc`. Git is configured interactively by prompting for user name and email. Each module is self-contained and can be run independently, making it easy to understand and modify what gets installed.
+This repository bootstraps MAP Lab programming Macs.
 
-For simplicity, it's assumed that you'll be running this on an Apple Silicon-based Mac with zsh already installed.
+## Boundary
 
-## Script Execution Philosophy
+Macsetup owns only the host substrate:
 
-**Never assume a local script directory exists.** The root install script (`start.sh`) is designed to be run directly from GitHub URLs, meaning there is no local clone of the repository at the time of execution. Module scripts and dependencies must therefore be fetched from URLs rather than referenced via relative paths.
+- Homebrew and Homebrew-managed CLI tools
+- mise installation and global default tools
+- the Zapper CLI install
+- the shell bridge that activates mise and adds MAP Lab helper scripts to PATH
+- doctor/inventory scripts for checking local machine state
 
-**Prefer simplicity over optimization.** While we could check if a local file exists and fall back to URLs, this adds unnecessary complexity. Just always fetching from URLs is simpler, more predictable, and easier to maintain. The performance difference is negligible for the setup use case.
+Macsetup does not directly install language runtimes with `nvm`, `pyenv`, or
+`rbenv`. Runtime versions belong to mise. Project services, ports, env files,
+and tasks belong to Zapper.
 
-### Rules for Script References:
+## Structure
 
-1. **Default to URL-based execution**: Unless there's an obvious benefit to using a local file, always fetch scripts from GitHub URLs using `curl` and execute them directly
-2. **Never use `SCRIPT_DIR` or `REPO_ROOT`**: These variables assume a local directory structure that may not exist
-3. **Source dependencies from URLs**: Use `source <(curl -fsSL https://raw.githubusercontent.com/...)` for shared libraries like `lib/output.sh`
-4. **Call other scripts via URLs**: Use `/bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/...)"` to execute other scripts
+- `Brewfile` is the required host-tool declaration.
+- `Brewfile.apps` is optional large app/cask installs.
+- `Brewfile.cloud` is optional cloud CLI installs.
+- `start.sh` is the bootstrap entrypoint and must remain runnable from the
+  GitHub raw URL.
+- `uninstall.sh` removes legacy macsetup-managed runtime state only; it must
+  never delete `~/Code`, project files, git config, or Homebrew.
+- `doctor.sh` checks whether the required host substrate is healthy.
+- `inventory.sh` prints what is installed.
+- `env/` contains shell configuration.
+- `bin/` contains small MAP Lab helper commands.
 
-### Exceptions:
+## Editing Rules
 
-- **Uninstall scripts**: These are run locally after setup is complete, so they can use local paths if needed
-- **Local utility scripts**: Scripts like `install-module.sh` and `uninstall.sh` are convenience wrappers meant to be run from a cloned repo and can use local paths
-- **Payload files**: The `start.sh` script clones the repo specifically to access payload files (`.zshrc`, etc.) that need to be copied to the user's home directory
+Keep the repo boring. Prefer deleting stale setup code over preserving historical
+layers.
+
+When adding a tool:
+
+1. Put required host CLI tools in `Brewfile`.
+2. Put optional heavy apps in `Brewfile.apps`.
+3. Put optional cloud CLIs in `Brewfile.cloud`.
+4. Put language/runtime/tool versions in mise, not shell scripts.
+5. Add or update doctor/inventory checks when useful.
+
+Before finishing, run:
+
+```bash
+zsh -n start.sh uninstall.sh doctor.sh inventory.sh env/zshrc
+brew bundle check --file ./Brewfile
+./doctor.sh
+```

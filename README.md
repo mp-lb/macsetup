@@ -1,31 +1,63 @@
 # Macsetup
 
+Macsetup is the MAP Lab host bootstrapper for programming Macs. It owns the
+small layer below project development:
+
+- Homebrew and Homebrew-managed host tools
+- mise for runtime/tool versions
+- Zapper CLI installation
+- shell bridge files
+
+It does not directly manage Node, Python, or Ruby with `nvm`, `pyenv`, or
+`rbenv` anymore. Those belong to mise.
+
 ## Install
 
 ```
-/bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/maplab-oss/macsetup/main/start.sh)"
+/bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/mp-lb/macsetup/main/start.sh)"
 ```
 
 The install script assumes you're running it as the admin user on the machine. If the repository already exists at `~/Code/macsetup`, the script will reuse it instead of cloning again.
 
-## Uninstall
+## Doctor
 
 ```
-/bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/maplab-oss/macsetup/main/uninstall.sh)"
+~/Code/macsetup/doctor.sh
 ```
 
-The uninstall script will prompt for confirmation before removing the repository, especially if there are uncommitted changes that would be lost.
+## Inventory
 
-## Module Commands
-
-For testing or reinstalling individual modules (requires repo at `~/Code/macsetup`):
-
-Install a module:
 ```
-~/Code/macsetup/install-module.sh python
+~/Code/macsetup/inventory.sh
 ```
 
-Uninstall a module:
+## Optional Apps
+
+Large app/cask installs are intentionally outside the default bootstrap path.
+Install them when needed:
+
 ```
-~/Code/macsetup/uninstall-module.sh python
+brew bundle --file ~/Code/macsetup/Brewfile.apps
+```
+
+Cloud CLIs are also optional:
+
+```
+brew bundle --file ~/Code/macsetup/Brewfile.cloud
+```
+
+## Uninstall Legacy Runtime State
+
+```
+~/Code/macsetup/uninstall.sh
+```
+
+This removes legacy macsetup-managed runtime directories such as `~/.nvm`,
+`~/.pyenv`, `~/.rbenv`, and the old `~/google-cloud-sdk` installer. It does not
+delete `~/Code`, Homebrew, git config, gh auth, or project files.
+
+To also clear mise-managed runtime state:
+
+```
+~/Code/macsetup/uninstall.sh --all
 ```
