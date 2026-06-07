@@ -1,0 +1,15 @@
+[default]
+sso_session = mp-lb
+sso_account_id = 809821125825
+sso_role_name = AdministratorAccess
+region = ap-southeast-1
+
+[profile felix]
+sso_session = mp-lb
+sso_account_id = 809821125825
+sso_role_name = AdministratorAccess
+region = ap-southeast-1
+[sso-session mp-lb]
+sso_start_url = https://mp-lb.awsapps.com/start/
+sso_region = ap-southeast-1
+sso_registration_scopes = sso:account:access

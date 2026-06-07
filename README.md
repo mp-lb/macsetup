@@ -7,6 +7,8 @@ small layer below project development:
 - mise for runtime/tool versions
 - Zapper CLI installation
 - shell bridge files
+- MAP Lab AWS SSO config
+- global Codex and Claude Code skills
 
 It does not directly manage Node, Python, or Ruby with `nvm`, `pyenv`, or
 `rbenv` anymore. Those belong to mise.
@@ -40,10 +42,13 @@ Install them when needed:
 brew bundle --file ~/Code/macsetup/Brewfile.apps
 ```
 
-Cloud CLIs are also optional:
+## Agent Skills
+
+Global agent skills are declared in `skills/global.txt` and installed for Codex
+and Claude Code:
 
 ```
-brew bundle --file ~/Code/macsetup/Brewfile.cloud
+~/Code/macsetup/bin/install-skills
 ```
 
 ## Uninstall Legacy Runtime State

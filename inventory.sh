@@ -29,8 +29,10 @@ print_version "node" node --version
 print_version "npm" npm --version
 print_version "pnpm" pnpm --version
 print_version "zap" zap --version
+print_version "clerk" clerk --version
 print_version "aws" aws --version
 print_version "gcloud" gcloud --version
+print_version "tree" tree --version
 print_version "docker" docker --version
 
 echo
@@ -47,4 +49,12 @@ if command -v brew >/dev/null 2>&1; then
   brew bundle check --file "$HOME/Code/macsetup/Brewfile" || true
 else
   echo "brew missing"
+fi
+
+echo
+echo "global agent skills"
+if command -v npm >/dev/null 2>&1; then
+  npx --yes skills list --global || true
+else
+  echo "npm missing"
 fi

@@ -68,8 +68,10 @@ check_command "mise" mise
 check_command "Node" node --version
 check_command "pnpm" pnpm --version
 check_command "Zapper" zap --version
-check_recommended_command "AWS CLI" aws --version
-check_recommended_command "Google Cloud CLI" gcloud
+check_command "Clerk CLI" clerk --version
+check_command "AWS CLI" aws --version
+check_command "Google Cloud CLI" gcloud
+check_command "tree" tree --version
 check_recommended_command "OrbStack/Docker" docker --version
 
 log "Checking legacy runtime cleanup."
@@ -82,6 +84,13 @@ if [ -f "$HOME/.zshrc" ] && grep -q "Code/macsetup/env/zshrc" "$HOME/.zshrc"; th
   success "Shell bridge: ~/.zshrc sources macsetup"
 else
   error "Shell bridge: ~/.zshrc does not source macsetup"
+  failures=$((failures + 1))
+fi
+
+if [ -f "$HOME/.aws/config" ] && cmp -s "$SCRIPT_DIR/env/aws-config" "$HOME/.aws/config"; then
+  success "AWS config: ~/.aws/config matches macsetup"
+else
+  error "AWS config: ~/.aws/config does not match macsetup"
   failures=$((failures + 1))
 fi
 

@@ -43,6 +43,10 @@ fi
 log "Installing shell bridge."
 cp "$REPO_PATH/env/home-zshrc" "$HOME/.zshrc"
 
+log "Installing AWS config."
+mkdir -p "$HOME/.aws"
+install -m 600 "$REPO_PATH/env/aws-config" "$HOME/.aws/config"
+
 log "Installing default mise tools."
 export PATH="$HOME/.local/bin:$PATH"
 eval "$(mise activate zsh)"
@@ -50,7 +54,10 @@ mise use --global node@lts pnpm@latest
 mise install
 
 log "Installing global Node CLIs."
-mise exec -- npm install -g @mp-lb/zapper pm2
+mise exec -- npm install -g @mp-lb/zapper pm2 clerk
+
+log "Installing global agent skills."
+"$REPO_PATH/bin/install-skills"
 
 success "Macsetup finished."
 note "Run: $REPO_PATH/doctor.sh"

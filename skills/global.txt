@@ -1,0 +1,5 @@
+# Global agent skills installed by macsetup.
+#
+# One source per line. Each source is installed globally for Codex and Claude Code.
+# Sources can be GitHub shorthands, URLs, or local paths accepted by `npx skills add`.
+clerk/skills

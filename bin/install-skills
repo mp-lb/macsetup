@@ -1,0 +1,40 @@
+#!/bin/zsh
+
+set -e
+
+SCRIPT_DIR="${0:A:h}"
+REPO_DIR="${SCRIPT_DIR:h}"
+SKILLS_FILE="$REPO_DIR/skills/global.txt"
+
+source "$REPO_DIR/lib/output.sh"
+
+export PATH="/opt/homebrew/bin:$HOME/.local/bin:$PATH"
+
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
+
+if [ ! -f "$SKILLS_FILE" ]; then
+  error "Missing skills inventory: $SKILLS_FILE"
+  exit 1
+fi
+
+if ! command -v npm >/dev/null 2>&1; then
+  error "npm is required to install agent skills."
+  exit 1
+fi
+
+log "Installing global agent skills."
+
+while IFS= read -r skill_source || [ -n "$skill_source" ]; do
+  skill_source="${skill_source%%#*}"
+  skill_source="${skill_source#"${skill_source%%[![:space:]]*}"}"
+  skill_source="${skill_source%"${skill_source##*[![:space:]]}"}"
+
+  [ -n "$skill_source" ] || continue
+
+  note "Installing skills from $skill_source."
+  npx --yes skills add "$skill_source" --global --agent codex claude-code --skill "*" --yes
+done < "$SKILLS_FILE"
+
+success "Global agent skills installed."

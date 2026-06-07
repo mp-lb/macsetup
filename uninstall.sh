@@ -9,7 +9,7 @@ log "Removing legacy macsetup-managed runtimes."
 
 if [ -f "$HOME/.nvm/nvm.sh" ]; then
   source "$HOME/.nvm/nvm.sh"
-  npm uninstall -g pnpm pm2 zapper-cli @mp-lb/zapper 2>/dev/null || true
+  npm uninstall -g pnpm pm2 zapper-cli @mp-lb/zapper clerk 2>/dev/null || true
 fi
 
 rm -rf "$HOME/.nvm"
