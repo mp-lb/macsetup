@@ -1,5 +1,3 @@
-tap "go-task/tap"
-
 brew "gh"
 brew "git"
 brew "gnupg"
