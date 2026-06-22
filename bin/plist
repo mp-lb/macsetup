@@ -1,9 +1,11 @@
 #!/bin/bash
 
-source "$HOME/Code/macsetup/lib/output.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../lib/paths.sh"
+source "$MACSETUP_REPO_PATH/lib/output.sh"
 
-# List all projects in $HOME/Code excluding archived ones
-CODE_DIR="$HOME/Code"
+# List all projects in the macsetup workspace excluding archived ones
+CODE_DIR="$MACSETUP_WORKSPACE"
 
 log "Projects in $CODE_DIR:"
 echo "====================="

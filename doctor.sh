@@ -4,6 +4,7 @@ set -e
 
 SCRIPT_DIR="${0:A:h}"
 source "$SCRIPT_DIR/lib/output.sh"
+source "$SCRIPT_DIR/lib/paths.sh"
 
 failures=0
 
@@ -80,7 +81,7 @@ check_absent_dir "pyenv" "$HOME/.pyenv"
 check_absent_dir "rbenv" "$HOME/.rbenv"
 check_absent_dir "old gcloud installer" "$HOME/google-cloud-sdk"
 
-if [ -f "$HOME/.zshrc" ] && grep -q "Code/macsetup/env/zshrc" "$HOME/.zshrc"; then
+if [ -f "$HOME/.zshrc" ] && grep -q 'MACSETUP_REPO_PATH/env/zshrc' "$HOME/.zshrc"; then
   success "Shell bridge: ~/.zshrc sources macsetup"
 else
   error "Shell bridge: ~/.zshrc does not source macsetup"

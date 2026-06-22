@@ -24,7 +24,7 @@ and tasks belong to Zapper.
 - `start.sh` is the bootstrap entrypoint and must remain runnable from the
   GitHub raw URL.
 - `uninstall.sh` removes legacy macsetup-managed runtime state only; it must
-  never delete `~/Code`, project files, git config, or Homebrew.
+  never delete `~/Work`, project files, git config, or Homebrew.
 - `doctor.sh` checks whether the required host substrate is healthy.
 - `inventory.sh` prints what is installed.
 - `env/` contains shell configuration.

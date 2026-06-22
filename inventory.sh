@@ -2,6 +2,9 @@
 
 set -e
 
+SCRIPT_DIR="${0:A:h}"
+source "$SCRIPT_DIR/lib/paths.sh"
+
 export PATH="/opt/homebrew/bin:$HOME/.local/bin:$PATH"
 
 if command -v mise >/dev/null 2>&1; then
@@ -46,7 +49,7 @@ fi
 echo
 echo "homebrew bundle"
 if command -v brew >/dev/null 2>&1; then
-  brew bundle check --file "$HOME/Code/macsetup/Brewfile" || true
+  brew bundle check --file "$MACSETUP_REPO_PATH/Brewfile" || true
 else
   echo "brew missing"
 fi

@@ -1,0 +1,34 @@
+#!/bin/zsh
+
+if [ -n "${ZSH_VERSION:-}" ]; then
+  _MACSETUP_PATHS_SOURCE="${(%):-%x}"
+elif [ -n "${BASH_SOURCE:-}" ]; then
+  _MACSETUP_PATHS_SOURCE="${BASH_SOURCE[0]}"
+else
+  _MACSETUP_PATHS_SOURCE="$0"
+fi
+
+case "$_MACSETUP_PATHS_SOURCE" in
+  /dev/fd/*|/proc/*|/private/dev/fd/*)
+    _MACSETUP_DEFAULT_WORKSPACE="$HOME/Work"
+    _MACSETUP_DEFAULT_REPO_PATH="$_MACSETUP_DEFAULT_WORKSPACE/macsetup"
+    ;;
+  *)
+    _MACSETUP_PATHS_DIR="$(cd "$(dirname "$_MACSETUP_PATHS_SOURCE")" && pwd)"
+    _MACSETUP_DEFAULT_REPO_PATH="$(cd "$_MACSETUP_PATHS_DIR/.." && pwd)"
+    _MACSETUP_DEFAULT_WORKSPACE="$(dirname "$_MACSETUP_DEFAULT_REPO_PATH")"
+    ;;
+esac
+
+if [ -n "${MACSETUP_REPO_PATH:-}" ] && [ -z "${MACSETUP_WORKSPACE:-}" ]; then
+  export MACSETUP_WORKSPACE="$(dirname "$MACSETUP_REPO_PATH")"
+else
+  export MACSETUP_WORKSPACE="${MACSETUP_WORKSPACE:-$_MACSETUP_DEFAULT_WORKSPACE}"
+fi
+
+export MACSETUP_REPO_PATH="${MACSETUP_REPO_PATH:-$MACSETUP_WORKSPACE/macsetup}"
+
+unset _MACSETUP_PATHS_SOURCE
+unset _MACSETUP_PATHS_DIR
+unset _MACSETUP_DEFAULT_WORKSPACE
+unset _MACSETUP_DEFAULT_REPO_PATH

@@ -3,30 +3,30 @@
 set -e
 
 REPO_SLUG="mp-lb/macsetup"
-REPO_PATH="$HOME/Code/macsetup"
 RAW_BASE="https://raw.githubusercontent.com/$REPO_SLUG/main"
 
 source <(curl -fsSL "$RAW_BASE/lib/output.sh")
+source <(curl -fsSL "$RAW_BASE/lib/paths.sh")
 
 log "Starting macsetup."
-mkdir -p "$HOME/Code"
+mkdir -p "$MACSETUP_WORKSPACE"
 
 command -v brew >/dev/null 2>&1 || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 export PATH="/opt/homebrew/bin:$PATH"
 
-if [ -d "$REPO_PATH/.git" ]; then
-  note "Using existing repository at $REPO_PATH."
+if [ -d "$MACSETUP_REPO_PATH/.git" ]; then
+  note "Using existing repository at $MACSETUP_REPO_PATH."
 else
   if ! command -v gh >/dev/null 2>&1; then
     brew install gh
   fi
 
   gh auth status >/dev/null 2>&1 || gh auth login
-  gh repo clone "$REPO_SLUG" "$REPO_PATH"
+  gh repo clone "$REPO_SLUG" "$MACSETUP_REPO_PATH"
 fi
 
 log "Installing Homebrew bundle."
-brew bundle --file "$REPO_PATH/Brewfile"
+brew bundle --file "$MACSETUP_REPO_PATH/Brewfile"
 
 [ -d "$HOME/.oh-my-zsh" ] || KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
@@ -41,11 +41,11 @@ else
 fi
 
 log "Installing shell bridge."
-cp "$REPO_PATH/env/home-zshrc" "$HOME/.zshrc"
+cp "$MACSETUP_REPO_PATH/env/home-zshrc" "$HOME/.zshrc"
 
 log "Installing AWS config."
 mkdir -p "$HOME/.aws"
-install -m 600 "$REPO_PATH/env/aws-config" "$HOME/.aws/config"
+install -m 600 "$MACSETUP_REPO_PATH/env/aws-config" "$HOME/.aws/config"
 
 log "Installing default mise tools."
 export PATH="$HOME/.local/bin:$PATH"
@@ -57,7 +57,7 @@ log "Installing global Node CLIs."
 mise exec -- npm install -g @mp-lb/zapper pm2 clerk
 
 log "Installing global agent skills."
-"$REPO_PATH/bin/install-skills"
+"$MACSETUP_REPO_PATH/bin/install-skills"
 
 success "Macsetup finished."
-note "Run: $REPO_PATH/doctor.sh"
+note "Run: $MACSETUP_REPO_PATH/doctor.sh"

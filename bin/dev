@@ -14,5 +14,8 @@ done
 
 # get path to this script
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../lib/paths.sh"
+
 PROJECT=$1
-task --dir "${HOME}/Code/${PROJECT}" ${@:2:num_options-1} ${@:num_options+1:1} -- "${@:num_options+2}"
+task --dir "${MACSETUP_WORKSPACE}/${PROJECT}" ${@:2:num_options-1} ${@:num_options+1:1} -- "${@:num_options+2}"
