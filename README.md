@@ -44,7 +44,7 @@ brew bundle --file ~/Work/macsetup/Brewfile.apps
 
 ## Agent Skills
 
-Global agent skills are declared in `skills/global.txt` and installed for Codex
+Global agent skills are declared in `config/global-skills.txt` and installed for Codex
 and Claude Code:
 
 ```

@@ -4,7 +4,7 @@ set -e
 
 SCRIPT_DIR="${0:A:h}"
 REPO_DIR="${SCRIPT_DIR:h}"
-SKILLS_FILE="$REPO_DIR/skills/global.txt"
+SKILLS_FILE="$REPO_DIR/config/global-skills.txt"
 
 source "$REPO_DIR/lib/output.sh"
 
