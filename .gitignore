@@ -2,3 +2,4 @@
 zshrc-user.sh
 .forum/
 tmp/
+**/.pnpm-store/
