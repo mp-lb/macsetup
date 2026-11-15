@@ -5,7 +5,9 @@ small layer below project development:
 
 - Homebrew and Homebrew-managed host tools
 - mise for runtime/tool versions
-- Zapper CLI installation
+- Claude Code CLI and workspace trust
+- Forum (`fm`), Berth (`berth`), and Zapper (`zap`) CLI installation
+- GitHub authentication and Git credential helper setup
 - shell bridge files
 - MAP Lab AWS SSO config
 - global Codex and Claude Code skills
@@ -20,6 +22,26 @@ It does not directly manage Node, Python, or Ruby with `nvm`, `pyenv`, or
 ```
 
 The install script assumes you're running it as the admin user on the machine. If the repository already exists at `~/Work/macsetup`, the script will reuse it instead of cloning again.
+
+Set `MACSETUP_WORKSPACE` to use a different Work folder, and optionally
+`MACSETUP_REPO_PATH` to place this checkout elsewhere. Both paths are saved in the
+shell bridge for future terminals. For example:
+
+```sh
+export MACSETUP_WORKSPACE="$HOME/Development"
+/bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/mp-lb/macsetup/main/start.sh)"
+```
+
+Setup installs Claude Code through Homebrew and records trust for the resolved
+workspace path in `~/.claude.json` (or `$CLAUDE_CONFIG_DIR/.claude.json`). Existing
+settings are preserved. Close Claude Code before rerunning setup so it does not
+overwrite the updated config. Claude Code can still ask for separate trust for Git
+repositories beneath the workspace; see its [workspace trust rules](https://code.claude.com/docs/en/permissions#project-allow-rules-and-workspace-trust).
+
+GitHub login is checked on every run, including when reusing a checkout, followed
+by `gh auth setup-git --hostname github.com`. Forum, Berth, and Zapper are installed
+from their published npm packages under the mise-managed Node runtime. Berth uses
+the production `@mp-lb/berth` package, never a development checkout link.
 
 ## Doctor
 

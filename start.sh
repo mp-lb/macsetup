@@ -14,14 +14,17 @@ mkdir -p "$MACSETUP_WORKSPACE"
 command -v brew >/dev/null 2>&1 || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 export PATH="/opt/homebrew/bin:$PATH"
 
+if ! command -v gh >/dev/null 2>&1; then
+  brew install gh
+fi
+
+log "Configuring GitHub authentication and Git credentials."
+gh auth status --hostname github.com >/dev/null 2>&1 || gh auth login --hostname github.com
+gh auth setup-git --hostname github.com
+
 if [ -d "$MACSETUP_REPO_PATH/.git" ]; then
   note "Using existing repository at $MACSETUP_REPO_PATH."
 else
-  if ! command -v gh >/dev/null 2>&1; then
-    brew install gh
-  fi
-
-  gh auth status >/dev/null 2>&1 || gh auth login
   gh repo clone "$REPO_SLUG" "$MACSETUP_REPO_PATH"
 fi
 
@@ -41,7 +44,11 @@ else
 fi
 
 log "Installing shell bridge."
-cp "$MACSETUP_REPO_PATH/env/home-zshrc" "$HOME/.zshrc"
+{
+  printf 'export MACSETUP_WORKSPACE=%q\n' "$MACSETUP_WORKSPACE"
+  printf 'export MACSETUP_REPO_PATH=%q\n' "$MACSETUP_REPO_PATH"
+  cat "$MACSETUP_REPO_PATH/env/home-zshrc"
+} > "$HOME/.zshrc"
 
 log "Installing AWS config."
 mkdir -p "$HOME/.aws"
@@ -54,7 +61,10 @@ mise use --global node@lts pnpm@latest
 mise install
 
 log "Installing global Node CLIs."
-mise exec -- npm install -g @mp-lb/zapper pm2 clerk
+mise exec -- npm install -g @mp-lb/forum-cli @mp-lb/berth @mp-lb/zapper pm2 clerk
+
+log "Trusting the workspace in Claude Code."
+mise exec -- node "$MACSETUP_REPO_PATH/lib/claude-trust.mjs" "$MACSETUP_WORKSPACE"
 
 log "Installing global agent skills."
 "$MACSETUP_REPO_PATH/bin/install-skills"

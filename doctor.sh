@@ -68,12 +68,31 @@ check_command "GitHub CLI" gh
 check_command "mise" mise
 check_command "Node" node --version
 check_command "pnpm" pnpm --version
+check_command "Claude Code" claude --version
+check_command "Forum" fm --version
+check_command "Berth" berth --version
 check_command "Zapper" zap --version
 check_command "Clerk CLI" clerk --version
 check_command "AWS CLI" aws --version
 check_command "Google Cloud CLI" gcloud
 check_command "tree" tree --version
 check_recommended_command "OrbStack/Docker" docker --version
+
+log "Checking Claude Code workspace trust."
+if node "$SCRIPT_DIR/lib/claude-trust.mjs" "$MACSETUP_WORKSPACE" --check; then
+  success "Claude Code: workspace is trusted"
+else
+  error "Claude Code: workspace trust is missing or unreadable; rerun start.sh"
+  failures=$((failures + 1))
+fi
+
+log "Checking GitHub Git credentials."
+if git config --global --get-all credential.https://github.com.helper | grep -Eq 'gh[[:space:]]+auth[[:space:]]+git-credential'; then
+  success "GitHub: Git uses the gh credential helper"
+else
+  error "GitHub: run gh auth setup-git --hostname github.com"
+  failures=$((failures + 1))
+fi
 
 log "Checking legacy runtime cleanup."
 check_absent_dir "nvm" "$HOME/.nvm"

@@ -1,3 +1,4 @@
 export MACSETUP_WORKSPACE="${MACSETUP_WORKSPACE:-$HOME/Work}"
-source "$MACSETUP_WORKSPACE/macsetup/lib/paths.sh"
+export MACSETUP_REPO_PATH="${MACSETUP_REPO_PATH:-$MACSETUP_WORKSPACE/macsetup}"
+source "$MACSETUP_REPO_PATH/lib/paths.sh"
 source "$MACSETUP_REPO_PATH/env/zshrc"

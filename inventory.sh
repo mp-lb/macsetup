@@ -31,6 +31,9 @@ print_version "mise" mise --version
 print_version "node" node --version
 print_version "npm" npm --version
 print_version "pnpm" pnpm --version
+print_version "claude" claude --version
+print_version "fm" fm --version
+print_version "berth" berth --version
 print_version "zap" zap --version
 print_version "clerk" clerk --version
 print_version "aws" aws --version

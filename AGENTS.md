@@ -8,7 +8,9 @@ Macsetup owns only the host substrate:
 
 - Homebrew and Homebrew-managed CLI tools
 - mise installation and global default tools
-- the Zapper CLI install
+- Claude Code installation and workspace trust
+- the Forum, production Berth, and Zapper CLI installs
+- GitHub authentication and Git credential helper setup
 - the shell bridge that activates mise and adds MAP Lab helper scripts to PATH
 - doctor/inventory scripts for checking local machine state
 
@@ -46,7 +48,8 @@ When adding a tool:
 Before finishing, run:
 
 ```bash
-zsh -n start.sh uninstall.sh doctor.sh inventory.sh env/zshrc
+zsh -n start.sh uninstall.sh doctor.sh inventory.sh env/zshrc env/home-zshrc
+node --test tests/*.test.mjs
 brew bundle check --file ./Brewfile
 ./doctor.sh
 ```
