@@ -1,5 +1,9 @@
 # Macsetup
 
+> Development has moved to [mp-lb/pc-setup](https://github.com/mp-lb/pc-setup).
+> Use that repository for new installs and changes. This repository is retained
+> as a historical copy.
+
 Macsetup is the MAP Lab host bootstrapper for programming Macs. It owns the
 small layer below project development:
 
